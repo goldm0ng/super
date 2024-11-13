@@ -1,7 +1,10 @@
 package roomescape.exception;
 
 public class NotFoundReservationException extends RuntimeException{
-    public NotFoundReservationException(String message){
-        super(message);
+
+    private static final String NOT_FOUND_RESERVATION_MESSAGE = "예악을 찾을 수 없습니다.";
+
+    public NotFoundReservationException(){
+        super(NOT_FOUND_RESERVATION_MESSAGE);
     }
 }
