@@ -17,4 +17,12 @@ public class ReservationDto {
     @NotBlank(message = "예약 시간을 입력하세요.")
     private String time;
 
+    public ReservationDto() {
+    }
+
+    public ReservationDto(String name, String date, String time) {
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
 }
