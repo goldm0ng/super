@@ -1,9 +1,11 @@
-package roomescape;
+package roomescape.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import roomescape.exception.MissingReservationDataException;
+import roomescape.domain.Reservation;
+import roomescape.dto.ReservationDto;
 import roomescape.exception.NotFoundReservationException;
 
 import java.net.URI;
@@ -24,31 +26,29 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    @ResponseBody
     public ResponseEntity<List<Reservation>> readReservation(){
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping("/reservations")
-    @ResponseBody
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation){
-        if (reservation.getName().isEmpty() || reservation.getDate().isEmpty() ||reservation.getTime().isEmpty()){
-            throw new MissingReservationDataException("예약 필수 정보가 입력되지 않았습니다.");
-        }
-
-        reservation.setId(index.getAndIncrement());
+    public ResponseEntity<Reservation> createReservation(@Valid  @RequestBody ReservationDto reservationDto){
+        Reservation reservation = new Reservation(
+                index.getAndIncrement(),
+                reservationDto.getName(),
+                reservationDto.getDate(),
+                reservationDto.getTime()
+        );
         reservations.add(reservation);
 
         return ResponseEntity.created(URI.create("/reservations/"+reservation.getId())).body(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
-    @ResponseBody
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id){
         Reservation reservation = reservations.stream()
                 .filter(r -> Objects.equals(r.getId(), id))
                 .findFirst()
-                .orElseThrow(()->new NotFoundReservationException("예악을 찾을 수 없습니다."));
+                .orElseThrow(()->new NotFoundReservationException());
 
         reservations.remove(reservation);
         return ResponseEntity.noContent().build();
