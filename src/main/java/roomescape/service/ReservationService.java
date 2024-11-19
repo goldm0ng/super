@@ -16,7 +16,8 @@ public class ReservationService {
     private final ReservationRepository repository;
 
     public Reservation addReservation(ReservationDto reservationDto){
-        return repository.save(reservationDto);
+        Reservation reservation = convertToEntity(reservationDto);
+        return repository.save(reservation);
     }
 
     public List<Reservation> checkReservations(){
@@ -27,4 +28,7 @@ public class ReservationService {
         return repository.delete(reservationId);
     }
 
+    private Reservation convertToEntity(ReservationDto dto) {
+        return new Reservation(null, dto.getName(), dto.getDate(), dto.getTime());
+    }
 }
