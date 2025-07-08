@@ -1,0 +1,3 @@
+rootProject.name = 'super'
+//include(":sub")
+//project(":sub").projectDir = file("sub2")
